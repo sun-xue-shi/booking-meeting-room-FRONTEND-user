@@ -1,8 +1,29 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
+  history: createWebHashHistory(),
+  routes: [
+    {
+      path: "/",
+      redirect: "/login",
+    },
+    {
+      path: "/login",
+      component: () => import("@/view/user/login/UserLogin.vue"),
+    },
+    {
+      path: "/register",
+      component: () => import("@/view/user/register/UserRegister.vue"),
+    },
+    {
+      path: "/update_password",
+      component: () => import("@/view/user/update_password/UpdatePassword.vue"),
+    },
+    {
+      path: "/:pathMatch(.*)",
+      component: () => import("@/view/NotFound.vue"),
+    },
+  ],
 });
 
 export default router;
