@@ -69,7 +69,11 @@
       <FormItem
         label="邮箱"
         name="email"
-        :rules="{ required: true, message: '请输入你的qq邮箱', type: 'email' }"
+        :rules="{
+          required: true,
+          message: '请输入正确的邮箱格式',
+          type: 'email',
+        }"
       >
         <Input
           placeholder="请输入qq邮箱"
@@ -81,7 +85,7 @@
       <FormItem
         label="验证码"
         name="captcha"
-        :rules="{ required: true, length: 6 }"
+        :rules="{ required: true, length: 6, message: '6位验证码' }"
       >
         <div class="captcha">
           <Input
@@ -174,7 +178,7 @@ async function sendCaptcha() {
     const res = await registerCaptcha(registerUser.value.email);
     const { data } = res.data;
     if (res.status === 200 || res.status === 201) {
-      message.success("验证码发送成功,30s后可以再次发送");
+      message.success(data + ",30s后可以再次发送");
       isSend.value = true;
       setTimeout(() => {
         isSend.value = false;

@@ -7,3 +7,11 @@ export function registerCaptcha(email: string) {
     },
   });
 }
+
+export function updatePasswordCaptcha(email: string) {
+  return axiosInstance.get("/user/update_password/captcha", {
+    params: {
+      address: email,
+    },
+  });
+}
