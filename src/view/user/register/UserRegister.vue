@@ -155,13 +155,14 @@ async function registerBtn(values: RegisterUser) {
     return message.error("两次密码不一致");
   } else {
     const res = await register(values);
+    const { data } = res.data;
     if (res.status === 200 || res.status === 201) {
       message.success("注册成功,为您跳转登录");
       setTimeout(() => {
         router.push("/");
       }, 1500);
     } else {
-      message.error("验证码错误/系统繁忙");
+      message.error(data || "系统繁忙,请稍后再试");
     }
   }
 }
@@ -171,6 +172,7 @@ async function sendCaptcha() {
     return message.warn("请填写邮箱地址!");
   } else {
     const res = await registerCaptcha(registerUser.value.email);
+    const { data } = res.data;
     if (res.status === 200 || res.status === 201) {
       message.success("验证码发送成功,30s后可以再次发送");
       isSend.value = true;
@@ -178,7 +180,7 @@ async function sendCaptcha() {
         isSend.value = false;
       }, 1000 * 30);
     } else {
-      message.error("系统繁忙,请稍后再试");
+      message.error(data || "系统繁忙,请稍后再试");
     }
   }
 }
