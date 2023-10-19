@@ -62,6 +62,7 @@ import {
 } from "ant-design-vue";
 import { login } from "@/service/user/login/login";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 interface LoginUser {
   username: string;
@@ -75,6 +76,7 @@ const loginUser = ref<LoginUser>({
   remember: true,
 });
 
+const router = useRouter();
 // 登录逻辑
 async function loginBtn(values: LoginUser) {
   const res = await login(values.username, values.password);
@@ -86,6 +88,9 @@ async function loginBtn(values: LoginUser) {
     localStorage.setItem("refresh_token", data.refreshToken);
     localStorage.setItem("access_token", data.accessToken);
     localStorage.setItem("user_info", JSON.stringify(data.userInfo));
+    setTimeout(() => {
+      router.push("/main");
+    });
   } else {
     message.error(data || "系统繁忙,请稍后再试");
   }

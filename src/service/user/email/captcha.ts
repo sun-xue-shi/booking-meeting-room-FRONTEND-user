@@ -15,3 +15,7 @@ export function updatePasswordCaptcha(email: string) {
     },
   });
 }
+
+export function updateInfoCaptcha() {
+  return axiosInstance.get("/user/update/captcha");
+}

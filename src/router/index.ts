@@ -20,6 +20,20 @@ const router = createRouter({
       component: () => import("@/view/user/update_password/UpdatePassword.vue"),
     },
     {
+      path: "/main",
+      component: () => import("@/view/main/MainPage.vue"),
+      children: [
+        {
+          path: "/aaa",
+          component: () => import("@/view/main/children/AaaA.vue"),
+        },
+        {
+          path: "/update",
+          component: () => import("@/view/main/children/UpdateInfo.vue"),
+        },
+      ],
+    },
+    {
       path: "/:pathMatch(.*)",
       component: () => import("@/view/NotFound.vue"),
     },
