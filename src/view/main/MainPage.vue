@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <h1>会议室预定</h1>
-      <UserOutlined class="icon" @click="getLoginInfo" />
+      <UserOutlined class="icon" @click="$router.push('/update')" />
     </div>
     <div class="body">
       <RouterView></RouterView>
@@ -12,13 +12,6 @@
 
 <script setup lang="ts">
 import { UserOutlined } from "@ant-design/icons-vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-async function getLoginInfo() {
-  router.push("/update");
-}
 </script>
 
 <style scoped lang="less">

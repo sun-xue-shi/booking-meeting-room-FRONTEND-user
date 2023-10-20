@@ -13,7 +13,20 @@
         name="headPic"
         :rules="{ required: true, message: '请输入头像' }"
       >
-        <Input v-model:value="updateUserInfo.headPic" />
+        <img
+          :src="getURL(updateUserInfo.headPic)"
+          alt="头像"
+          width="100"
+          height="100"
+        />
+        <UploadDragger
+          name="file"
+          action="http://localhost:3005/user/upload"
+          @change="handleChange"
+        >
+          <InboxOutlined />
+          点击 / 拖拽文件到此
+        </UploadDragger>
       </FormItem>
 
       <FormItem
@@ -77,13 +90,25 @@
 </template>
 
 <script setup lang="ts">
-import { Button, FormItem, Form, Input, message } from "ant-design-vue";
+import {
+  Button,
+  FormItem,
+  Form,
+  Input,
+  message,
+  UploadDragger,
+  type UploadChangeParam,
+} from "ant-design-vue";
+import { InboxOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
 import { updateInfoCaptcha } from "@/service/user/email/captcha";
-import { updateInfo } from "@/service/user/update_info/update_info";
+import {
+  getUserInfo,
+  updateInfo,
+} from "@/service/user/update_info/update_info";
 import { useRouter } from "vue-router";
+import { getURL } from "@/utils/getUrl";
 
-const userInfo = JSON.parse(localStorage.getItem("user_info") as string);
 const router = useRouter();
 export interface UpdateUserInfo {
   headPic: string;
@@ -93,14 +118,25 @@ export interface UpdateUserInfo {
 }
 
 const updateUserInfo = ref<UpdateUserInfo>({
-  headPic: userInfo.headPic,
-  nickName: userInfo.nickName,
-  email: userInfo.email,
+  headPic: "",
+  nickName: "",
+  email: "",
   captcha: "",
 });
-// updateUserInfo.email = userInfo?.email;
+
+async function getLoginInfo() {
+  const res = await getUserInfo();
+  const { data } = res.data;
+  updateUserInfo.value.email = data.email;
+  updateUserInfo.value.headPic = data.headPic;
+  updateUserInfo.value.nickName = data.nickName;
+}
+getLoginInfo();
+
 let isSend = ref(false);
 let isLoading = ref(false);
+let src = ref();
+src.value = "http://localhost:3005/" + updateUserInfo.value.headPic;
 
 async function updateBtn(values: UpdateUserInfo) {
   const res = await updateInfo(values);
@@ -134,6 +170,17 @@ async function sendCaptcha() {
     } else {
       message.error(data || "系统繁忙,请稍后再试");
     }
+  }
+}
+
+function handleChange(info: UploadChangeParam) {
+  const { status } = info.file;
+  if (status === "done") {
+    console.log(info.file.response.data);
+    updateUserInfo.value.headPic = info.file.response.data;
+    message.success(info.file.name + "文件上传成功");
+  } else if (status === "error") {
+    message.error(info.file.name + "文件上传失败");
   }
 }
 </script>

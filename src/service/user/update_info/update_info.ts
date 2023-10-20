@@ -10,3 +10,7 @@ interface UpdateInfo {
 export function updateInfo(updateInfo: UpdateInfo) {
   return axiosInstance.post("/user/update", updateInfo);
 }
+
+export function getUserInfo() {
+  return axiosInstance.get("/user/info");
+}
