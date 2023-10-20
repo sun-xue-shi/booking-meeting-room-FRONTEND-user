@@ -4,7 +4,7 @@ import type { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:3005/",
-  timeout: 3000,
+  timeout: 30000,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -31,9 +31,8 @@ axiosInstance.interceptors.response.use(
   },
   // 请求没有发送成功时没有response属性
   async (error) => {
-    if (!error.response) {
-      return Promise.reject(error);
-    }
+    console.log(error);
+
     const { data, config } = error.response;
 
     if (refreshing) {

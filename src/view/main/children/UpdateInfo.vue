@@ -61,8 +61,9 @@
           @click="sendCaptcha"
           class="btn"
           :disabled="isSend"
+          :loading="isLoading"
         >
-          发送验证码
+          发送
         </Button>
       </FormItem>
 
@@ -99,6 +100,7 @@ const updateUserInfo = ref<UpdateUserInfo>({
 });
 // updateUserInfo.email = userInfo?.email;
 let isSend = ref(false);
+let isLoading = ref(false);
 
 async function updateBtn(values: UpdateUserInfo) {
   const res = await updateInfo(values);
@@ -117,10 +119,14 @@ async function sendCaptcha() {
   if (!updateUserInfo.value.email) {
     return message.warn("请填写邮箱地址!");
   } else {
+    isLoading.value = true;
     const res = await updateInfoCaptcha();
+    console.log(res);
     const { data } = res.data;
+
     if (res.status === 200 || res.status === 201) {
       message.success(data + ",30s后可以再次发送");
+      isLoading.value = false;
       isSend.value = true;
       setTimeout(() => {
         isSend.value = false;

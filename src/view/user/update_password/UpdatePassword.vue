@@ -87,8 +87,9 @@
           @click="sendCaptcha"
           class="btn"
           :disabled="isSend"
+          :loading="isLoading"
         >
-          发送验证码
+          发送
         </Button>
       </FormItem>
 
@@ -131,6 +132,7 @@ const updatePasswordInfo = ref<UpdatePassword>({
   username: "",
 });
 
+let isLoading = ref(false);
 let isSend = ref(false);
 
 const router = useRouter();
@@ -142,6 +144,8 @@ async function updateBtn(values: UpdatePassword) {
     return message.error("两次密码不一致");
   } else {
     const res = await updatePassword(values);
+    console.log(res);
+
     const { data } = res.data;
     if (res.status === 200 || res.status === 201) {
       message.success(data);
@@ -158,10 +162,12 @@ async function sendCaptcha() {
   if (!updatePasswordInfo.value.email) {
     return message.warn("请填写邮箱地址!");
   } else {
+    isLoading.value = true;
     const res = await updatePasswordCaptcha(updatePasswordInfo.value.email);
     const { data } = res.data;
     if (res.status === 200 || res.status === 201) {
       message.success(data + ",30s后可再次发送");
+      isLoading.value = false;
       isSend.value = true;
       setTimeout(() => {
         isSend.value = false;
