@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <h1>会议室预定</h1>
+      <h1>会议室预定系统</h1>
       <UserOutlined class="icon" @click="$router.push('/update')" />
     </div>
     <div class="body">

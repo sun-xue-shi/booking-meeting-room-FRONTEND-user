@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="update-container">
     <h1>会议室预定系统</h1>
     <Form
       :model="updatePasswordInfo"
@@ -180,7 +180,7 @@ async function sendCaptcha() {
 </script>
 
 <style scoped lang="less">
-.register-container {
+.update-container {
   width: 400px;
   text-align: center;
   margin: 200px auto 0 auto;

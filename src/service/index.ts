@@ -4,7 +4,7 @@ import type { AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
   baseURL: "http://localhost:3005/",
-  timeout: 30000,
+  timeout: 5000,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -31,8 +31,6 @@ axiosInstance.interceptors.response.use(
   },
   // 请求没有发送成功时没有response属性
   async (error) => {
-    console.log(error);
-
     const { data, config } = error.response;
 
     if (refreshing) {
@@ -46,7 +44,9 @@ axiosInstance.interceptors.response.use(
 
     if (data.code === 401 && !config.url.includes("/user/refresh")) {
       refreshing = true;
+
       const res = await refreshToken();
+
       refreshing = false;
 
       if (res.status === 200) {
@@ -73,8 +73,8 @@ async function refreshToken() {
     },
   });
 
-  localStorage.setItem("access_token", res.data.access_token || "");
-  localStorage.setItem("refresh_token", res.data.refresh_token || "");
+  localStorage.setItem("access_token", res.data.data.access_token);
+  localStorage.setItem("refresh_token", res.data.data.refresh_token);
 
   return res;
 }

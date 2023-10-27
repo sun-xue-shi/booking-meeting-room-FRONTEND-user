@@ -1,5 +1,5 @@
 <template>
-  <div class="register-container">
+  <div class="update-container">
     <h1>会议室预定系统</h1>
     <Form
       :model="updateUserInfo"
@@ -81,7 +81,7 @@
       </FormItem>
 
       <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
-        <Button class="register" type="primary" html-type="submit">
+        <Button class="update" type="primary" html-type="submit">
           确认修改
         </Button>
       </FormItem>
@@ -135,8 +135,6 @@ getLoginInfo();
 
 let isSend = ref(false);
 let isLoading = ref(false);
-let src = ref();
-src.value = "http://localhost:3005/" + updateUserInfo.value.headPic;
 
 async function updateBtn(values: UpdateUserInfo) {
   const res = await updateInfo(values);
@@ -186,12 +184,12 @@ function handleChange(info: UploadChangeParam) {
 </script>
 
 <style scoped lang="less">
-.register-container {
+.update-container {
   width: 400px;
   text-align: center;
   margin: 100px auto 0 auto;
 
-  .register {
+  .update {
     width: 90%;
   }
 
