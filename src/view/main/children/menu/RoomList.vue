@@ -1,7 +1,12 @@
 <template>
   <div class="room-container">
     <div class="search">
-      <Form :model="searchMeetingRoom" @finish="searchBtn" layout="inline">
+      <Form
+        :model="searchMeetingRoom"
+        @finish="searchBtn"
+        layout="inline"
+        ref="formRef"
+      >
         <FormItem label="会议室名称" name="name">
           <Input :maxlength="20" v-model:value="searchMeetingRoom.name" />
         </FormItem>
@@ -19,7 +24,25 @@
         </FormItem>
 
         <FormItem>
-          <Button class="btn1" type="primary" html-type="submit"> 搜索 </Button>
+          <Button
+            class="btn1"
+            type="default"
+            @click="handelReset"
+            :icon="h(RedoOutlined)"
+          >
+            重置
+          </Button>
+        </FormItem>
+
+        <FormItem>
+          <Button
+            class="btn1"
+            type="primary"
+            html-type="submit"
+            :icon="h(SearchOutlined)"
+          >
+            搜索
+          </Button>
         </FormItem>
       </Form>
     </div>
@@ -51,11 +74,14 @@ import {
   Input,
   Button,
   type TableColumnsType,
+  type FormInstance,
   Table,
   message,
   Badge,
 } from "ant-design-vue";
+import { RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 import { meetingSearch } from "@/service/user/list/list";
+import { formatUTC } from "@/utils/format";
 
 interface SearchMeetingRoom {
   location: string;
@@ -79,8 +105,8 @@ interface MeetingRoomSearchResult {
   equipment: string;
   description: string;
   isBooked: boolean;
-  createTime: Date;
-  updateTime: Date;
+  createTime: string;
+  updateTime: string;
 }
 
 let searchResult = ref<MeetingRoomSearchResult[]>([]);
@@ -115,11 +141,13 @@ const columns: TableColumnsType<MeetingRoomSearchResult> = [
   {
     title: "添加时间",
     dataIndex: "createTime",
+    customRender: (value) => formatUTC(value.record.createTime),
     align: "center",
   },
   {
     title: "上次更新时间",
     dataIndex: "updateTime",
+    customRender: (value) => formatUTC(value.record.updateTime),
     align: "center",
   },
   {
@@ -147,13 +175,12 @@ const columns: TableColumnsType<MeetingRoomSearchResult> = [
 
 let pageNo = 1;
 let pageSize = 9;
+let totalCount = ref(15);
 
 const setPage = (newPageNo: number, newPageSize: number) => {
   pageNo = newPageNo;
   pageSize = newPageSize;
 };
-
-let totalCount = ref(15);
 
 function handleChange(pageNo: number, pageSize: number) {
   setPage(pageNo, pageSize);
@@ -175,12 +202,20 @@ async function searchBtn(values: SearchMeetingRoom) {
 
   if (res.status === 200 || res.status === 201) {
     searchResult.value = data.meetingRooms;
+
     totalCount.value = data.totalCount;
   } else {
     message.error(data || "系统繁忙,请稍后再试");
   }
 }
 searchBtn(searchMeetingRoom.value);
+
+// 表单重置
+const formRef = ref<FormInstance>();
+function handelReset() {
+  formRef.value?.resetFields();
+  searchBtn(searchMeetingRoom.value);
+}
 </script>
 
 <style scoped lang="less">

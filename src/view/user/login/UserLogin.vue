@@ -89,7 +89,7 @@ async function loginBtn(values: LoginUser) {
     localStorage.setItem("access_token", data.accessToken);
     localStorage.setItem("user_info", JSON.stringify(data.userInfo));
     setTimeout(() => {
-      router.push("/main");
+      router.push("/menu/room_list");
     });
   } else {
     message.error(data || "系统繁忙,请稍后再试");

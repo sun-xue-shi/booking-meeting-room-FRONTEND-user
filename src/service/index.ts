@@ -1,8 +1,8 @@
 import { message } from "ant-design-vue";
 import axios from "axios";
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosInstance, AxiosRequestConfig } from "axios";
 
-export const axiosInstance = axios.create({
+export const axiosInstance: AxiosInstance = axios.create({
   baseURL: "http://localhost:3005/",
   timeout: 5000,
 });

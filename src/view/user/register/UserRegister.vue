@@ -107,7 +107,7 @@
 
       <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
         <div class="link">
-          <a href="/login">已有账号?去登录</a>
+          <RouterLink to="/login">已有账号?去登录</RouterLink>
         </div>
       </FormItem>
 
@@ -161,7 +161,6 @@ async function registerBtn(values: RegisterUser) {
     return message.error("两次密码不一致");
   } else {
     const res = await register(values);
-    console.log(res);
 
     const { data } = res.data;
     if (res.status === 200 || res.status === 201) {

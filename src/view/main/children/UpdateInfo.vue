@@ -41,20 +41,8 @@
         />
       </FormItem>
 
-      <FormItem
-        label="邮箱"
-        name="email"
-        :rules="{
-          required: true,
-          message: '请输入正确的邮箱格式',
-          type: 'email',
-        }"
-      >
-        <Input
-          placeholder="请输入qq邮箱"
-          :maxlength="20"
-          v-model:value="updateUserInfo.email"
-        />
+      <FormItem label="邮箱" name="email">
+        <Input :maxlength="20" v-model:value="updateUserInfo.email" disabled />
       </FormItem>
 
       <FormItem
@@ -124,6 +112,9 @@ const updateUserInfo = ref<UpdateUserInfo>({
   captcha: "",
 });
 
+let isSend = ref(false);
+let isLoading = ref(false);
+
 async function getLoginInfo() {
   const res = await getUserInfo();
   const { data } = res.data;
@@ -133,16 +124,13 @@ async function getLoginInfo() {
 }
 getLoginInfo();
 
-let isSend = ref(false);
-let isLoading = ref(false);
-
 async function updateBtn(values: UpdateUserInfo) {
   const res = await updateInfo(values);
   const { data } = res.data;
   if (res.status === 200 || res.status === 201) {
     message.success("修改成功");
     setTimeout(() => {
-      router.push("/main");
+      router.push("/menu/room_list");
     }, 1000);
   } else {
     message.error(data || "系统繁忙,请稍后再试");
@@ -154,8 +142,9 @@ async function sendCaptcha() {
     return message.warn("请填写邮箱地址!");
   } else {
     isLoading.value = true;
+
     const res = await updateInfoCaptcha();
-    console.log(res);
+
     const { data } = res.data;
 
     if (res.status === 200 || res.status === 201) {

@@ -135,6 +135,7 @@ const updatePasswordInfo = ref<UpdatePassword>({
 let isLoading = ref(false);
 let isSend = ref(false);
 
+// 提交信息
 const router = useRouter();
 async function updateBtn(values: UpdatePassword) {
   if (
@@ -158,6 +159,7 @@ async function updateBtn(values: UpdatePassword) {
   }
 }
 
+// 发送验证码
 async function sendCaptcha() {
   if (!updatePasswordInfo.value.email) {
     return message.warn("请填写邮箱地址!");
