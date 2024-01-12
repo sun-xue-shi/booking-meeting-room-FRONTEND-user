@@ -63,6 +63,7 @@
       >
       </Table>
     </div>
+    <book-modal :is-book-open="isShow" :handel-close="onClose"></book-modal>
   </div>
 </template>
 
@@ -82,22 +83,22 @@ import {
 import { RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
 import { meetingSearch } from "@/service/user/list/list";
 import { formatUTC } from "@/utils/format";
+import BookModal from "@/view/main/BookModal.vue";
 
-interface SearchMeetingRoom {
+type SearchMeetingRoom = {
   location: string;
   name: string;
   equipment: string;
   capacity: number | undefined;
-}
+};
 
-const searchMeetingRoom = ref<SearchMeetingRoom>({
-  location: "",
-  name: "",
-  equipment: "",
-  capacity: undefined,
-});
+const onClose = () => {
+  isShow.value = true;
+};
+const isShow = ref(false);
+const searchMeetingRoom = ref({} as SearchMeetingRoom);
 
-interface MeetingRoomSearchResult {
+type MeetingRoomSearchResult = {
   id: number;
   name: string;
   capacity: number;
@@ -107,9 +108,9 @@ interface MeetingRoomSearchResult {
   isBooked: boolean;
   createTime: string;
   updateTime: string;
-}
+};
 
-let searchResult = ref<MeetingRoomSearchResult[]>([]);
+let searchResult = ref([] as MeetingRoomSearchResult[]);
 
 // table栏信息
 const columns: TableColumnsType<MeetingRoomSearchResult> = [
@@ -168,7 +169,9 @@ const columns: TableColumnsType<MeetingRoomSearchResult> = [
     customRender: (value) =>
       h("a", {
         innerHTML: "预定",
-        onClick: () => {},
+        onClick: () => {
+          isShow.value = true
+        },
       }),
   },
 ];

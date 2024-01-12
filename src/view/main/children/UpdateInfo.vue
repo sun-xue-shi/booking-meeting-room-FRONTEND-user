@@ -98,19 +98,14 @@ import { useRouter } from "vue-router";
 import { getURL } from "@/utils/getUrl";
 
 const router = useRouter();
-export interface UpdateUserInfo {
+export type UpdateUserInfo = {
   headPic: string;
   nickName: string;
   email: string;
   captcha: string;
-}
+};
 
-const updateUserInfo = ref<UpdateUserInfo>({
-  headPic: "",
-  nickName: "",
-  email: "",
-  captcha: "",
-});
+const updateUserInfo = ref({} as UpdateUserInfo);
 
 let isSend = ref(false);
 let isLoading = ref(false);

@@ -16,10 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ClockCircleOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons-vue";
+import { UnorderedListOutlined } from "@ant-design/icons-vue";
 import { Menu, type MenuProps, type MenuTheme } from "ant-design-vue";
 import type {
   MenuClickEventHandler,
@@ -41,11 +38,6 @@ const menuItems: MenuProps["items"] = [
     label: "会议室列表",
     icon: () => h(UnorderedListOutlined),
   },
-  {
-    key: "2",
-    label: "预定历史",
-    icon: () => h(ClockCircleOutlined),
-  },
 ];
 
 const router = useRouter();
@@ -56,10 +48,6 @@ const handleMenuClick: MenuClickEventHandler = (info: MenuInfo) => {
       path = "/menu/room_list";
       state.selectedKeys = ["1"];
       break;
-    case "2":
-      path = "/menu/booking_history";
-      state.selectedKeys = ["2"];
-      break;
   }
   router.push(path);
 };
@@ -67,8 +55,6 @@ const handleMenuClick: MenuClickEventHandler = (info: MenuInfo) => {
 function getSelectedKeys() {
   if (routes.path === "/menu/room_list") {
     return ["1"];
-  } else if (routes.path === "/menu/booking_history") {
-    return ["2"];
   } else {
     return ["1"];
   }

@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: "/menu",
+      redirect: "/menu/room_list",
     },
     {
       path: "/login",
@@ -35,11 +35,6 @@ const router = createRouter({
               path: "room_list",
               component: () => import("@/view/main/children/menu/RoomList.vue"),
             },
-            {
-              path: "booking_history",
-              component: () =>
-                import("@/view/main/children/menu/BookingHistory.vue"),
-            },
           ],
         },
       ],
@@ -54,7 +49,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   //路由守卫：登陆成功(有token)才能进入main页面
   const token = localStorage.getItem("refresh_token");
-  if (to.path.startsWith("/main") && !token) {
+  if (to.path.startsWith("/menu") && !token) {
     return "/login";
   }
 });
