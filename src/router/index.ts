@@ -35,6 +35,10 @@ const router = createRouter({
               path: "room_list",
               component: () => import("@/view/main/children/menu/RoomList.vue"),
             },
+            {
+              path: "book_record",
+              component: () => import("@/view/main/children/menu/BookRecord.vue"),
+            },
           ],
         },
       ],

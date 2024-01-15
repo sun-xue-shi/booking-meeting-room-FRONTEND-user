@@ -16,7 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { UnorderedListOutlined } from "@ant-design/icons-vue";
+import {
+  UnorderedListOutlined,
+  FieldTimeOutlined,
+} from "@ant-design/icons-vue";
 import { Menu, type MenuProps, type MenuTheme } from "ant-design-vue";
 import type {
   MenuClickEventHandler,
@@ -38,6 +41,11 @@ const menuItems: MenuProps["items"] = [
     label: "会议室列表",
     icon: () => h(UnorderedListOutlined),
   },
+  {
+    key: "2",
+    label: "预定记录",
+    icon: () => h(FieldTimeOutlined),
+  },
 ];
 
 const router = useRouter();
@@ -48,6 +56,10 @@ const handleMenuClick: MenuClickEventHandler = (info: MenuInfo) => {
       path = "/menu/room_list";
       state.selectedKeys = ["1"];
       break;
+    case "2":
+      path = "/menu/book_record";
+      state.selectedKeys = ["2"];
+      break;
   }
   router.push(path);
 };
@@ -55,6 +67,8 @@ const handleMenuClick: MenuClickEventHandler = (info: MenuInfo) => {
 function getSelectedKeys() {
   if (routes.path === "/menu/room_list") {
     return ["1"];
+  } else if (routes.path === "/menu/book_record") {
+    return ["2"];
   } else {
     return ["1"];
   }

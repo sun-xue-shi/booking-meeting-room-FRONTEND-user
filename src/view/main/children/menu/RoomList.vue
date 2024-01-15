@@ -63,7 +63,12 @@
       >
       </Table>
     </div>
-    <book-modal :is-book-open="isShow" :handel-close="onClose"></book-modal>
+    <book-modal
+      :is-book-open="isShow"
+      :handel-close="onClose"
+      :current-room="currentRoom"
+      :current-room-id="currentRoomId"
+    ></book-modal>
   </div>
 </template>
 
@@ -81,7 +86,7 @@ import {
   Badge,
 } from "ant-design-vue";
 import { RedoOutlined, SearchOutlined } from "@ant-design/icons-vue";
-import { meetingSearch } from "@/service/user/list/list";
+import { meetingSearch } from "@/service/user/list/room_list";
 import { formatUTC } from "@/utils/format";
 import BookModal from "@/view/main/BookModal.vue";
 
@@ -93,12 +98,13 @@ type SearchMeetingRoom = {
 };
 
 const onClose = () => {
-  isShow.value = true;
+  isShow.value = false;
 };
+
 const isShow = ref(false);
 const searchMeetingRoom = ref({} as SearchMeetingRoom);
 
-type MeetingRoomSearchResult = {
+export type MeetingRoomSearchResult = {
   id: number;
   name: string;
   capacity: number;
@@ -111,7 +117,8 @@ type MeetingRoomSearchResult = {
 };
 
 let searchResult = ref([] as MeetingRoomSearchResult[]);
-
+const currentRoom = ref("");
+const currentRoomId = ref();
 // table栏信息
 const columns: TableColumnsType<MeetingRoomSearchResult> = [
   {
@@ -170,7 +177,9 @@ const columns: TableColumnsType<MeetingRoomSearchResult> = [
       h("a", {
         innerHTML: "预定",
         onClick: () => {
-          isShow.value = true
+          isShow.value = true;
+          currentRoom.value = value.record.name;
+          currentRoomId.value = value.record.id;
         },
       }),
   },
@@ -233,3 +242,4 @@ function handelReset() {
   }
 }
 </style>
+@/service/user/list/room_list
