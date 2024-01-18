@@ -11,7 +11,6 @@ export async function bookingList(
 ) {
   let bookingTimeRangeStart;
   let bookingTimeRangeEnd;
-  console.log(searchBooking);
 
   if (searchBooking.rangeStartDate && searchBooking.rangeStartTime) {
     const rangeStartDateStr = dayjs(searchBooking.rangeStartDate).format(
@@ -36,8 +35,6 @@ export async function bookingList(
     ).valueOf();
   }
 
-  console.log(bookingTimeRangeEnd);
-
   return await axiosInstance.get("/booking/list", {
     params: {
       pageNo: pageNo,
@@ -45,6 +42,7 @@ export async function bookingList(
       username: searchBooking.username,
       roomName: searchBooking.meetingRoomName,
       location: searchBooking.meetingRoomPosition,
+      theme: searchBooking.theme,
       bookingTimeRangeStart,
       bookingTimeRangeEnd,
     },
@@ -73,5 +71,6 @@ export async function bookingAdd(booking: Booking) {
     startTime,
     endTime,
     note: booking.note,
+    theme: booking.theme,
   });
 }

@@ -30,11 +30,8 @@
           <TimePicker v-model="searchBooking.rangeEndTime" />
         </FormItem>
 
-        <FormItem label="位置" name="meetingRoomPosition">
-          <Input
-            :maxlength="20"
-            v-model:value="searchBooking.meetingRoomPosition"
-          />
+        <FormItem label="会议主题" name="theme">
+          <Input :maxlength="20" v-model:value="searchBooking.theme" />
         </FormItem>
 
         <FormItem>
@@ -107,6 +104,7 @@ import dayjs from "dayjs";
 export type SearchBooking = {
   username: string;
   meetingRoomName: string;
+  theme: string;
   meetingRoomPosition: string;
   rangeStartDate: Date;
   rangeStartTime: Date;
@@ -123,6 +121,7 @@ type BookingSearchResult = {
   endTime: string;
   status: string;
   note: string;
+  theme: string;
   createTime: string;
   updateTime: string;
   room: MeetingRoomSearchResult;
@@ -138,7 +137,12 @@ const columns: TableColumnsType<BookingSearchResult> = [
     customRender: (value) => value.record.room.name,
     align: "center",
   },
-
+  {
+    title: "会议主题",
+    dataIndex: "theme",
+    // customRender: (value) => value.record.room.name,
+    align: "center",
+  },
   {
     title: "开始时间",
     dataIndex: "startTime",
@@ -224,7 +228,6 @@ const columns: TableColumnsType<BookingSearchResult> = [
 
 const handleUnbind = async (id: number) => {
   const res = await unbind(id);
-  console.log(res);
 
   if (res.status === 201 || res.status === 200) {
     message.success("状态更新成功");
@@ -251,7 +254,6 @@ function handleChange(pageNo: number, pageSize: number) {
 // 搜索会议室
 async function searchBtn(values: SearchBooking) {
   const res = await bookingList(values, pageNo, pageSize);
-  console.log(res);
 
   const { data } = res.data;
   if (res.status === 200 || res.status === 201) {

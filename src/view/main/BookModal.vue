@@ -27,16 +27,36 @@
           <DatePicker v-model:value="createBooking.rangeStartDate" />
         </FormItem>
 
-        <FormItem label="开始时间" name="startTime">
+        <FormItem
+          label="开始时间"
+          name="startTime"
+          :rules="[{ required: true, message: '请选择开始时间' }]"
+        >
           <TimePicker v-model:value="createBooking.rangeStartTime" />
         </FormItem>
 
-        <FormItem label="结束日期" name="endDate">
+        <FormItem
+          label="结束日期"
+          name="endDate"
+          :rules="[{ required: true, message: '请选择结束日期' }]"
+        >
           <DatePicker v-model:value="createBooking.rangeEndDate" />
         </FormItem>
 
-        <FormItem label="结束时间" name="endTime">
+        <FormItem
+          label="结束时间"
+          name="endTime"
+          :rules="[{ required: true, message: '请选择结束时间' }]"
+        >
           <TimePicker v-model:value="createBooking.rangeEndTime" />
+        </FormItem>
+
+        <FormItem label="会议主题" name="theme">
+          <Textarea
+            :maxlength="30"
+            v-model:value="createBooking.theme"
+            placeholder="请输入会议主题"
+          />
         </FormItem>
 
         <FormItem label="备注" name="note">
@@ -80,16 +100,14 @@ export type Booking = {
   rangeEndDate: string;
   rangeEndTime: string;
   note: string;
+  theme: string;
 };
 
 const createBooking = ref({} as Booking);
 
 // 确定后创建会议室
 async function handleOk(values: Booking) {
-  console.log(props.currentRoomId);
-
   values.meetingRoomId = props.currentRoomId;
-  console.log(values);
 
   const res = await bookingAdd(values);
 
