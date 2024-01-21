@@ -1,100 +1,51 @@
 <template>
   <div class="login-container">
     <h1>会议室预定系统</h1>
-    <Form
-      :model="loginUser"
-      @finish="loginBtn"
-      :label-col="{ span: 5 }"
-      :wrapper-col="{ span: 17 }"
-      :colon="false"
-    >
-      <FormItem
-        label="用户名"
-        name="username"
-        :rules="{ required: true, message: '请输入用户名' }"
-      >
-        <Input
-          placeholder="请输入用户名"
-          :maxlength="20"
-          v-model:value="loginUser.username"
-        />
-      </FormItem>
+    <Tabs v-model:active-key="activeKey" type="card" centered :tabBarGutter="60"
+      >nowrap
+      <TabPane key="1" tab=" 密 码 登 录 ">
+        <PasswordLogin ref="passRef" />
+      </TabPane>
 
-      <FormItem
-        label="密码"
-        name="password"
-        :rules="{
-          required: true,
-          message: '请输入6-12位密码',
-          max: 12,
-          min: 6,
-        }"
-      >
-        <InputPassword
-          placeholder="请输入6~12位密码"
-          :maxlength="12"
-          v-model:value="loginUser.password"
-        />
-      </FormItem>
+      <TabPane key="2" tab=" 邮 箱 登 录 ">
+        <EmailLogin ref="emailRef" />
+      </TabPane>
+    </Tabs>
 
-      <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
-        <div class="link">
-          <RouterLink to="/register">创建账号</RouterLink>
-          <RouterLink to="/update_password">忘记密码</RouterLink>
-        </div>
-      </FormItem>
+    <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
+      <div class="link">
+        <RouterLink to="/register">注册账号</RouterLink>
+        <RouterLink to="/update_password" v-if="activeKey === '1'">
+          忘记密码
+        </RouterLink>
+      </div>
+    </FormItem>
 
-      <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
-        <Button class="btn" type="primary" html-type="submit"> 登录 </Button>
-      </FormItem>
-    </Form>
+    <FormItem :label-col="{ span: 0 }" :wrapper-col="{ span: 24 }">
+      <Button class="btn" type="primary" @click="onSubmit" html-type="submit">
+        登录
+      </Button>
+    </FormItem>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  Form,
-  FormItem,
-  Input,
-  InputPassword,
-  Button,
-  message,
-} from "ant-design-vue";
-import { login } from "@/service/user/login/login";
+import { Button, FormItem, TabPane, Tabs } from "ant-design-vue";
+import PasswordLogin from "./PasswordLogin.vue";
+import EmailLogin from "./EmailLogin.vue";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
-interface LoginUser {
-  username: string;
-  password: string;
-  remember: boolean;
-}
+const passRef = ref<InstanceType<typeof PasswordLogin>>();
+const emailRef = ref<InstanceType<typeof EmailLogin>>();
+const activeKey = ref("1");
 
-const loginUser = ref<LoginUser>({
-  username: "",
-  password: "",
-  remember: true,
-});
-
-const router = useRouter();
-// 登录逻辑
-async function loginBtn(values: LoginUser) {
-  const res = await login(values.username, values.password);
-  const { code, data } = res.data;
-  if (code === 201 || code === 200) {
-    message.success("登录成功");
-
-    // 保存信息
-    localStorage.setItem("refresh_token", data.refreshToken);
-    localStorage.setItem("access_token", data.accessToken);
-    localStorage.setItem("user_info", JSON.stringify(data.userInfo));
-    setTimeout(() => {
-      router.push("/menu/room_list");
-    });
+const onSubmit = () => {
+  if (activeKey.value === "1") {
+    passRef.value?.passLoginBtn();
   } else {
-    message.error(data || "系统繁忙,请稍后再试");
+    emailRef.value?.emailLoginBtn();
   }
-}
+};
 </script>
 
 <style scoped lang="less">
@@ -113,6 +64,11 @@ async function loginBtn(values: LoginUser) {
     margin: 0 25px;
   }
 
+  .tabs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
   .btn {
     width: 90%;
   }

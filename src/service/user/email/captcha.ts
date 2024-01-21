@@ -8,6 +8,14 @@ export function registerCaptcha(email: string) {
   });
 }
 
+export function loginCaptcha(email: string) {
+  return axiosInstance.get("/user/login-captcha", {
+    params: {
+      address: email,
+    },
+  });
+}
+
 export function updatePasswordCaptcha(email: string) {
   return axiosInstance.get("/user/update_password/captcha", {
     params: {
