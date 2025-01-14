@@ -6,6 +6,7 @@
         :theme="state.theme"
         @click="handleMenuClick"
         :selected-keys="state.selectedKeys"
+        style="width: 150px"
       >
       </Menu>
     </div>

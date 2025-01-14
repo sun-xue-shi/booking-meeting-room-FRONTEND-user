@@ -7,6 +7,7 @@
       :label-col="{ span: 5 }"
       :wrapper-col="{ span: 17 }"
       :colon="false"
+      autocomplete="off"
     >
       <FormItem
         label="用户名"

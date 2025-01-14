@@ -14,6 +14,7 @@
         :label-col="{ span: 6 }"
         :wrapper-col="{ span: 15 }"
         layout="r"
+        ref="formRef"
       >
         <FormItem label="会议室名称">
           {{ props.currentRoom }}
@@ -29,7 +30,7 @@
 
         <FormItem
           label="开始时间"
-          name="startTime"
+          name="rangeStartTime"
           :rules="[{ required: true, message: '请选择开始时间' }]"
         >
           <TimePicker v-model:value="createBooking.rangeStartTime" />
@@ -37,7 +38,7 @@
 
         <FormItem
           label="结束日期"
-          name="endDate"
+          name="rangeEndDate"
           :rules="[{ required: true, message: '请选择结束日期' }]"
         >
           <DatePicker v-model:value="createBooking.rangeEndDate" />
@@ -45,7 +46,7 @@
 
         <FormItem
           label="结束时间"
-          name="endTime"
+          name="rangeEndTime"
           :rules="[{ required: true, message: '请选择结束时间' }]"
         >
           <TimePicker v-model:value="createBooking.rangeEndTime" />
@@ -81,8 +82,11 @@ import {
   DatePicker,
   TimePicker,
   message,
+  type FormInstance,
 } from "ant-design-vue";
 import { ref } from "vue";
+
+const formRef = ref<FormInstance>();
 
 const props = defineProps<{
   isBookOpen: boolean;
@@ -107,13 +111,14 @@ const createBooking = ref({} as Booking);
 
 // 确定后创建会议室
 async function handleOk(values: Booking) {
+  await formRef.value?.validate();
   values.meetingRoomId = props.currentRoomId;
 
   const res = await bookingAdd(values);
 
   const { data } = res.data;
   if (res.status === 200 || res.status === 201) {
-    message.success("创建成功");
+    message.success("预定成功");
     createBooking.value = {} as Booking;
     props.handelClose();
   } else {

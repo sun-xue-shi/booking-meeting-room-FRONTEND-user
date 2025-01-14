@@ -34,27 +34,23 @@
           <Input :maxlength="20" v-model:value="searchBooking.theme" />
         </FormItem>
 
-        <FormItem>
-          <Button
-            class="btn1"
-            type="default"
-            @click="handelReset"
-            :icon="h(RedoOutlined)"
-          >
-            重置
-          </Button>
-        </FormItem>
+        <Button
+          class="btn1"
+          type="default"
+          @click="handelReset"
+          :icon="h(RedoOutlined)"
+        >
+          重置
+        </Button>
 
-        <FormItem>
-          <Button
-            class="btn1"
-            type="primary"
-            html-type="submit"
-            :icon="h(SearchOutlined)"
-          >
-            搜索
-          </Button>
-        </FormItem>
+        <Button
+          class="btn1"
+          type="primary"
+          html-type="submit"
+          :icon="h(SearchOutlined)"
+        >
+          搜索
+        </Button>
       </Form>
     </div>
     <div class="table">
@@ -98,7 +94,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons-vue";
 import type { MeetingRoomSearchResult } from "./RoomList.vue";
-import { bookingList, unbind } from "@/service/user/list/book_list";
+import { bookingList, unbind, urge } from "@/service/user/list/book_list";
 import dayjs from "dayjs";
 
 export type SearchBooking = {
@@ -207,21 +203,36 @@ const columns: TableColumnsType<BookingSearchResult> = [
   {
     title: "操作",
     align: "center",
+    width: 200,
     customRender: (value) => {
-      if (value.record.status === "申请中") {
-        return h(
-          Popconfirm,
-          {
-            okText: "确定",
-            cancelText: "取消",
-            title: "解除预定",
-            description: "确认解除该次预定?",
-            onConfirm: () => handleUnbind(value.record.id),
-            icon: h(QuestionCircleFilled),
-          },
-          [h("a", { innerHTML: "解除预定" })]
-        );
-      }
+      return value.record.status === "申请中"
+        ? [
+            h(
+              Popconfirm,
+              {
+                okText: "确定",
+                cancelText: "取消",
+                title: "解除预定",
+                description: "确认解除该次预定?",
+                onConfirm: () => handleUnbind(value.record.id),
+                icon: h(QuestionCircleFilled),
+              },
+              [h("a", { innerHTML: "解除预定" })]
+            ),
+            h(
+              Popconfirm,
+              {
+                okText: "确定",
+                cancelText: "取消",
+                title: "催办",
+                description: "确认催办本次预定?",
+                onConfirm: () => handleUrge(value.record.id),
+                icon: h(QuestionCircleFilled),
+              },
+              [h(Button, { innerHTML: "催办", type: "link" })]
+            ),
+          ]
+        : "done";
     },
   },
 ];
@@ -230,7 +241,18 @@ const handleUnbind = async (id: number) => {
   const res = await unbind(id);
 
   if (res.status === 201 || res.status === 200) {
-    message.success("状态更新成功");
+    message.success("解除成功");
+    searchBtn(searchBooking.value);
+  } else {
+    message.error(res.data.data);
+  }
+};
+
+const handleUrge = async (id: number) => {
+  const res = await urge(id);
+
+  if (res.status === 201 || res.status === 200) {
+    message.success("催办成功");
     searchBtn(searchBooking.value);
   } else {
     message.error(res.data.data);

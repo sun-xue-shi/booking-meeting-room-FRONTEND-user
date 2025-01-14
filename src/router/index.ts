@@ -1,11 +1,11 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
-      redirect: "/menu/room_list",
+      redirect: "/login",
     },
     {
       path: "/login",
@@ -37,7 +37,8 @@ const router = createRouter({
             },
             {
               path: "book_record",
-              component: () => import("@/view/main/children/menu/BookRecord.vue"),
+              component: () =>
+                import("@/view/main/children/menu/BookRecord.vue"),
             },
           ],
         },

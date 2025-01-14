@@ -54,6 +54,11 @@ export async function unbind(id: number) {
   return await axiosInstance.get("/booking/unbind/" + id);
 }
 
+// 解除预定
+export async function urge(id: number) {
+  return await axiosInstance.get("/booking/urge/" + id);
+}
+
 // 添加预定
 export async function bookingAdd(booking: Booking) {
   const rangeStartDateStr = dayjs(booking.rangeStartDate).format("YYYY-MM-DD");

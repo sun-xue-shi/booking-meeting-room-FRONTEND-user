@@ -119,6 +119,7 @@ export type MeetingRoomSearchResult = {
 let searchResult = ref([] as MeetingRoomSearchResult[]);
 const currentRoom = ref("");
 const currentRoomId = ref();
+const isFrozen = ref(false);
 // table栏信息
 const columns: TableColumnsType<MeetingRoomSearchResult> = [
   {
@@ -158,30 +159,22 @@ const columns: TableColumnsType<MeetingRoomSearchResult> = [
     customRender: (value) => formatUTC(value.record.updateTime),
     align: "center",
   },
-  {
-    title: "预定状态",
-    dataIndex: "isBooked",
-    align: "center",
-    customRender: (value) => {
-      if (value.record.isBooked) {
-        return h(Badge, { status: "error", text: "已被预订" });
-      } else {
-        return h(Badge, { status: "success", text: "可预订" });
-      }
-    },
-  },
+
   {
     title: "操作",
     align: "center",
-    customRender: (value) =>
-      h("a", {
-        innerHTML: "预定",
-        onClick: () => {
-          isShow.value = true;
-          currentRoom.value = value.record.name;
-          currentRoomId.value = value.record.id;
-        },
-      }),
+    customRender: (value) => {
+      return isFrozen.value
+        ? "您已被冻结"
+        : h("a", {
+            innerHTML: "预定",
+            onClick: () => {
+              isShow.value = true;
+              currentRoom.value = value.record.name;
+              currentRoomId.value = value.record.id;
+            },
+          });
+    },
   },
 ];
 
@@ -214,7 +207,7 @@ async function searchBtn(values: SearchMeetingRoom) {
 
   if (res.status === 200 || res.status === 201) {
     searchResult.value = data.meetingRooms;
-
+    isFrozen.value = data.user.is_frozen;
     totalCount.value = data.totalCount;
   } else {
     message.error(data || "系统繁忙,请稍后再试");
